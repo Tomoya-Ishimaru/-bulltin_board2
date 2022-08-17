@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  react:
+    build: ./frontend/dockerfile  # Dockerfileの親フォルダパス
+    container_name: react-container  # コンテナ名
+    hostname: react-server  # ホスト名
+    tty: true
+    environment:
+      - NODE_ENV=DEVELOPMENT
+      - PORT=3000  # コンテナ内でのポート番号
+    volumes:
+      - ./frontend/app:/usr/src/app
+      - react-data:/usr/src/app/node_modules  # volumeのエントリポイント => 高速化
+    ports:
+      - 3000:3000 # 公開ポート番号:environmentで指定したポート番号
+    working_dir: /usr/src/app
+    command: sh -c "npm install && npm run dev"
+    # command: sh -c "ls"
+
+  db:
+    build: ./database/mysql/dockerfile
+    platform: linux/x86_64 
+    container_name: "db-container"
+    volumes:
+      # - ./data:/var/lib/mysql
+      - ./database/mysql/my.cnf:/etc/mysql/conf.d/my.cnf # cnfファイル
+      - ./database/mysql/sql:/docker-entrypoint-initdb.d # 起動時に実行するsqlファイル
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bulletin_board
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+      TZ: 'Asia/Tokyo'
+    ports:
+      - "3306:3306"
+
+volumes:
+  mysql-data:
+    name: db-data
+  react-data:
+    name: react-data
