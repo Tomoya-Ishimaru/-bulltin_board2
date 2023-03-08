@@ -4,12 +4,12 @@ import { useRouter } from 'next/router'
 import { useSelector } from "react-redux"
 import { MenuIconButton } from "../../atoms/button/MenuIconButton";
 import { MenuDrawer } from "../../molecules/MenuDrawer";
-import { useSelectUser } from "../../../hooks/useSelectUser";
+// import { useSelectUser } from "../../../hooks/useSelectUser";
 
 export default function Header() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter()
-  const { onSelectUser, selectedUser } = useSelectUser();
+//   const { onSelectUser, selectedUser } = useSelectUser();
   const onClickHome = useCallback(() => router.push("/"), []);
   const onClickPost = useCallback(
     () => router.push("/post"),
